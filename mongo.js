@@ -42,8 +42,8 @@ MongoConnector.prototype.findUser = function(email, callback) {
 
 
 var connector = new MongoConnector('localhost', 27017);
-console.log('woo');
+var result = connector.findUser('neoice@neoice.net');
+console.log(result);
 
 // this call fails because the open() hasn't completed yet.
 // I <3 nodejs /s
-connector.findUser('neoice@neoice.net', function(error, result){console.log(result)});
