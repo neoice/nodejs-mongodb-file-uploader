@@ -1,0 +1,37 @@
+<h1><%= title %></h1>
+
+<p>Enter new member</p>
+First: 
+<input type="text" id="first" />
+Last: 
+<input type="text" id="last" />
+<br />
+<button id="btn1">Update member</button>
+
+<p>Member List</p>
+<ul>
+    <% for(var i = 0; i < Users.length; ++i){ %>
+       <li>
+        <%= Users[i].first + " " + Users[i].last %>
+       </li> 
+    <% } %>
+</ul>
+</ br>
+<span id="test"></span>
+<span id="resp"></span>
+<a href="/about">about page</a>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#btn1").click(function(){
+            var user = {user:{ first:$("#first").val(), last:$("#last").val()}};
+            $.post("ajaxResponse", user, function(resp){
+                alert(resp[0].first);
+                var response = JSON.stringify(resp);
+                $("#resp").html(response);
+            });
+        });
+    });
+
+    
+</script>

@@ -1,0 +1,182 @@
+/*******
+TODO:
+1) add <address> tags to our addresses in footer
+2) 
+*******/
+
+
+
+
+/**********************************
+General Styles
+***********************************/
+
+div, ul, h1, h2, h3, li, p, img{margin:0; padding:0;}
+
+body
+{
+	background-image: url('../images/beach_background.jpg');
+	background-size: cover;
+	font: 15px/20px Arial, Helvetica, sans-serif; 
+	margin: 0; 
+	padding: 0;
+}
+
+a:hover{
+	text-decoration:underline;
+}
+
+
+
+/**********************************
+Main Box (header, menu, and dropbox)
+***********************************/
+
+#main_box{
+	width: 800px;  
+	position:relative; 
+	margin: 0 auto;
+	padding: 20px;
+}
+
+#main_box img{
+	position: relative;
+	left: -80px;
+	width: 500px;
+	height: 160px;
+}
+
+#menu{
+	background-color: rgba(256, 256, 256,0.5);
+	height: 100px;
+	margin: 20px 0;
+	padding: 10px;
+	
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    
+    -moz-box-shadow: 0 0 10px 1px #000000;
+	-webkit-box-shadow: 0 0 10px 1px #000000;
+	box-shadow: 0 0 10px 1px #000000;
+
+	
+}
+
+#dropbox{
+	min-height: 400px;
+	position: relative;
+	overflow: hidden;
+
+	background-color: rgba(256, 256, 256,0.5);	
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+	
+	-moz-box-shadow: inset 0 0 15px 1px #000000;
+	-webkit-box-shadow: inset 0 0 15px 1px #000000;
+	box-shadow: inset 0 0 15px 1px #000000;
+}
+
+#dropbox .message{
+	font-size: 12px;
+    text-align: center;
+    padding-top:160px;
+    display: block;
+}
+
+
+
+/**********************************
+Image Previews
+***********************************/
+
+
+#dropbox .preview{
+	width:220px;
+	height: 200px;
+	float:left;
+	margin: 20px 0 20px 35px;
+	position: relative;
+}
+
+#dropbox .preview img{
+	max-width: 215px;
+	max-height:180px;
+	border:3px solid #fff;
+	display: block;
+	box-shadow:0 0 2px #000;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#dropbox .imageHolder{
+	display: inline-block;
+	position:relative;
+	width: 220px;
+	height: 185px;
+}
+
+#dropbox .filenameHolder{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	font-size: 10px;
+}
+
+#dropbox .uploaded{
+	position: absolute;
+	top:0;
+	left:0;
+	height:100%;
+	width:100%;
+	background: url('../images/notification_done.png') no-repeat center center rgba(255,255,255,0.5);
+	display: none;
+}
+
+#dropbox .preview.done .uploaded{
+	display: block;
+}
+
+
+
+/**********************************
+Progress Bar
+***********************************/
+
+
+
+#dropbox .progressHolder{
+	position: absolute;
+	background-color:#252f38;
+	height:15px;
+	width:100%;
+	left:0;
+	bottom: 0;
+	
+	-moz-box-shadow: 0 0 2px #000;
+	-webkit-box-shadow: 0 0 2px #000;
+	box-shadow:0 0 2px #000;
+}
+
+#dropbox .progress{
+	background-color: lime;
+	position: absolute;
+	height:100%;
+	left:0;
+	width:0;
+	
+	-moz-box-shadow: 0 0 1px rgba(255, 255, 255, 0.4) inset;
+	-webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.4) inset;
+	box-shadow: 0 0 1px rgba(255, 255, 255, 0.4) inset;
+	
+	-moz-transition:0.25s;
+	-webkit-transition:0.25s;
+	-o-transition:0.25s;
+	transition:0.25s;
+}
+
+#dropbox .preview.done .progress{
+	width:100% !important;
+}
