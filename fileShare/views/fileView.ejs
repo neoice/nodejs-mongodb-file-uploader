@@ -1,0 +1,34 @@
+<div class="main_box">
+	<div>
+    	<img src="/images/Sun_Logo.png" alt="fileShare logo" onclick="document.location.href='/'"/>
+    </div>
+</div>
+
+<div id="fileview">
+
+	<% for(var i = 0; i < files.length; ++i){ %>
+	<div class="preview">
+		<span class="imageHolder">
+			<img class="fileviewimage" 
+				onclick="document.location.href=
+				'<%= "/download/" + userId + "/" + files[i] %>'" 
+				
+				<% if(files[i].type.match(/^image\//)){ %>
+					src=<%= files[i].path %>
+					
+				<% }else if(files[i].type.match(/^video\//)){ %>
+					src="../images/videoImage.png"
+					
+				<% }else{ %>
+					src="../images/fileImage.png"
+				<% } %>
+
+			/>
+		</span>
+		<div class="fileviewname"><%= files[i] %></div>
+	</div> 
+    <% } %>
+
+</div>
+
+<div class="spacer"></div>
