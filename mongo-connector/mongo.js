@@ -31,7 +31,6 @@ MongoConnector.prototype.findUser = function(email, callback) {
 				}
 				else {
 					console.log('found user');
-					console.log(result);
 					callback(null, result);
 				}
 			});
@@ -39,11 +38,23 @@ MongoConnector.prototype.findUser = function(email, callback) {
 	});
 };
 
-
-
-var connector = new MongoConnector('localhost', 27017);
-var result = connector.findUser('neoice@neoice.net');
-console.log(result);
-
-// this call fails because the open() hasn't completed yet.
-// I <3 nodejs /s
+MongoConnector.prototype.addUser = function(user_object, callback) {
+	this.getCollection(function(error, user_collection) {
+		if( error ) {
+			callback(error);
+		}
+		else {
+			console.log('adding user');
+			user_collection.insert(user_object, function(error, result) {
+				if (error) {
+					console.log(error);
+					callback(error);
+				}
+				else {
+					console.log('added user');
+					callback(null, result);
+				}
+			});
+		}
+	});
+};
