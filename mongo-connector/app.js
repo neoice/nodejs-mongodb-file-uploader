@@ -43,6 +43,12 @@ app.get ('/finduser/:email', function(req, res) {
 app.post ('/adduser/', function(req, res) {
 	console.log(req.body);
 	connector.addUser(req.body, function(error, result) {
-		res.send(200);
+		if (error)
+		{
+			res.end( JSON.stringify(error) );
+		}
+		else {
+			res.send(200);
+		}
 	});
 });

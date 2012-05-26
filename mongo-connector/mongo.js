@@ -1,7 +1,6 @@
 var mongodb = require('mongodb');
 
 MongoConnector = function(host, port) {
-	//this.db = new mongodb.Db('test', new mongodb.Server(host, port, {auto_reconnect: false}, {strict:true}));
 	this.db = new mongodb.Db('test', new mongodb.Server(host, port, {auto_reconnect: false}, {strict:false}));
 	this.db.open(function(){});
 };
@@ -39,20 +38,39 @@ MongoConnector.prototype.findUser = function(email, callback) {
 };
 
 MongoConnector.prototype.addUser = function(user_object, callback) {
+	// workaround for this changing later on.
+	// incidently, self is a reserved word in vim
+	// and appears to be an idiom others have used before:
+	// http://www.alistapart.com/articles/getoutbindingsituations
+	var self = this;
+
 	this.getCollection(function(error, user_collection) {
 		if( error ) {
 			callback(error);
 		}
 		else {
-			console.log('adding user');
-			user_collection.insert(user_object, function(error, result) {
-				if (error) {
-					console.log(error);
+			self.findUser(user_object['email'], function(error, result) {
+				if ( error ) {
 					callback(error);
 				}
 				else {
-					console.log('added user');
-					callback(null, result);
+					if ( result ) {
+						console.log('user exists already!');
+						callback('exists', null);
+					}
+					else {
+						console.log('adding user');
+						user_collection.insert(user_object, function(error, result) {
+							if (error) {
+								console.log(error);
+								callback(error);
+							}
+							else {
+								console.log('added user');
+								callback(null, result);
+							}
+						});
+					}
 				}
 			});
 		}
