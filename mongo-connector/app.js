@@ -28,8 +28,8 @@ app.configure('production', function(){
 });
 
 // start the server
-app.listen(3000, function(){
-  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+app.listen(3002, function(){
+  console.log("mongodb-connector listening on port %d in %s mode", app.address().port, app.settings.env);
 });
 
 // user management
