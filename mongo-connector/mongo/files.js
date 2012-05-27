@@ -33,7 +33,16 @@ FileConnector.prototype.findFile = function(md5, callback) {
 				}
 				else {
 					console.log('found file');
-					callback(null, result);
+					chunker.buildFile(result['_id'], function(error, data) {
+						if (error) {
+							console.log(error);
+							callback(error);
+						}
+						else {
+				//			console.log(data.toString());
+							callback(null, data);
+						}
+					});
 				}
 			});
 		}

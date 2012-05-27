@@ -8,8 +8,10 @@ var app = module.exports = express.createServer();
 
 
 // mongodb
-var mc = require('./mongo.js');
-var connector = new MongoConnector('localhost', 27017);
+var mongo_users = require('./mongo/users.js');
+var mongo_files = require('./mongo/files.js');
+var user_connector = new UserConnector('localhost', 27017);
+var file_connector = new FileConnector('localhost', 27017);
 
 // express configuration
 app.configure(function(){
@@ -34,7 +36,7 @@ app.listen(3002, function(){
 
 // user management
 app.get ('/finduser/:email', function(req, res) {
-	connector.findUser('neoice@neoice.net', function(error, result) {
+	user_connector.findUser(req.params.email, function(error, result) {
 		console.log(result);
 		res.end( JSON.stringify(result) );
 	});
@@ -42,7 +44,7 @@ app.get ('/finduser/:email', function(req, res) {
 
 app.post ('/adduser/', function(req, res) {
 	console.log(req.body);
-	connector.addUser(req.body, function(error, result) {
+	user_connector.addUser(req.body, function(error, result) {
 		if (error)
 		{
 			res.end( JSON.stringify(error) );
@@ -55,13 +57,27 @@ app.post ('/adduser/', function(req, res) {
 
 app.post ('/authuser/', function(req, res) {
 	console.log(req.body);
-	connector.authUser(req.body, function(error, result) {
+	user_connector.authUser(req.body, function(error, result) {
 		if (error)
 		{
 			res.send(401);
 		}
 		else {
 			res.send(200);
+		}
+	});
+});
+
+
+app.get ('/file/:id', function(req, res) {
+	file_connector.findFile(req.params.id, function(error, result) {
+		if (result)
+		{
+		//	res.send(200);
+			res.end(result);
+		}
+		else {
+			res.send(404);
 		}
 	});
 });
