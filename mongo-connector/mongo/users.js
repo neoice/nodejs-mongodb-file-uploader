@@ -1,11 +1,11 @@
 var mongodb = require('mongodb');
 
-MongoConnector = function(host, port) {
+UserConnector = function(host, port) {
 	this.db = new mongodb.Db('test', new mongodb.Server(host, port, {auto_reconnect: false}, {strict:false}));
 	this.db.open(function(){});
 };
 
-MongoConnector.prototype.getCollection = function(callback) {
+UserConnector.prototype.getCollection = function(callback) {
 	this.db.collection('users', function(error, users_collection) {
 		if (error) {
 			callback(error);
@@ -16,7 +16,7 @@ MongoConnector.prototype.getCollection = function(callback) {
 	});
 };
 
-MongoConnector.prototype.findUser = function(email, callback) {
+UserConnector.prototype.findUser = function(email, callback) {
 	this.getCollection(function(error, user_collection) {
 		if( error ) {
 			callback(error);
@@ -37,7 +37,7 @@ MongoConnector.prototype.findUser = function(email, callback) {
 	});
 };
 
-MongoConnector.prototype.addUser = function(user_object, callback) {
+UserConnector.prototype.addUser = function(user_object, callback) {
 	// workaround for this changing later on.
 	// incidently, self is a reserved word in vim
 	// and appears to be an idiom others have used before:
@@ -77,7 +77,7 @@ MongoConnector.prototype.addUser = function(user_object, callback) {
 	});
 };
 
-MongoConnector.prototype.authUser = function(user_object, callback) {
+UserConnector.prototype.authUser = function(user_object, callback) {
 	var self = this;
 
 	this.getCollection(function(error, user_collection) {
