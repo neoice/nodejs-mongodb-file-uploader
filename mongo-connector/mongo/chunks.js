@@ -18,19 +18,63 @@ FileChunker.prototype.getCollection = function(callback) {
 	});
 };
 
+FileChunker.prototype.buildFile = function(file, callback) {
+	self = this;
+	console.log(file);
+
+	this.gridfs.get(file._id, function(error, data) {
+		if (error) {
+			console.log(error);
+			callback(error);
+		}
+		else {
+			console.log(data);
+			callback(null, data);
+		}
+	});
+};
+
+/*
 FileChunker.prototype.buildFile = function(files_id, callback) {
+	self = this;
+
+	var buffer = new Buffer('');
+
+	this.gridfs.put(buffer, {}, function(error, files_id) {
+		console.log(files_id);
+		self.gridfs.get(files_id._id, function(error, data) {
+			if (error) {
+				console.log(error);
+				callback(error);
+			}
+			else {
+				callback(null, buffer);
+			}
+		});
+	});
+
+	console.log(buffer);
+
+
+		/*
+
 	this.gridfs.get(files_id, function(error, data) {
 		if (error) {
 			console.log(error);
 			callback(error);
 		}
 		else {
+
+
+
 	//		console.log(data.toString());
 			callback(null, data);
 		}
 	});
+
 };
 
+	*/
 
 /*
 FileChunker.prototype.buildFile = function(files_id, callback) {

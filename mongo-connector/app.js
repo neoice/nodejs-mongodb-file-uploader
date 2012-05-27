@@ -73,8 +73,16 @@ app.get ('/file/:id', function(req, res) {
 	file_connector.findFile(req.params.id, function(error, result) {
 		if (result)
 		{
-		//	res.send(200);
-			res.end(result);
+			// hardcode the content type for now
+			res.setHeader("Content-Type", "image/jpeg");
+
+			// workaround for gridfs.get() returning the file offset by 4 bytes.
+			// dev says it's not a bug LOL
+			var ffs = result.slice(4);
+
+			// SEND OUR RESPONSE BABY
+			res.write(ffs);
+			res.end();
 		}
 		else {
 			res.send(404);
