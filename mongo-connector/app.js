@@ -52,3 +52,16 @@ app.post ('/adduser/', function(req, res) {
 		}
 	});
 });
+
+app.post ('/authuser/', function(req, res) {
+	console.log(req.body);
+	connector.authUser(req.body, function(error, result) {
+		if (error)
+		{
+			res.send(401);
+		}
+		else {
+			res.send(200);
+		}
+	});
+});

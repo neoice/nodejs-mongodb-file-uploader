@@ -76,3 +76,37 @@ MongoConnector.prototype.addUser = function(user_object, callback) {
 		}
 	});
 };
+
+MongoConnector.prototype.authUser = function(user_object, callback) {
+	var self = this;
+
+	this.getCollection(function(error, user_collection) {
+		if( error ) {
+			callback(error);
+		}
+		else {
+			self.findUser(user_object['email'], function(error, result) {
+				if ( error ) {
+					callback(error);
+				}
+				else {
+					if ( result ) {
+						console.log('user found, comparing password...');
+
+						if (user_object['password'] === result['password']) {
+							console.log('password match!');
+							callback(null, true);
+						}
+						else {
+							callback('bad password', null);
+						}
+					}
+					else {
+						console.log('no user found');
+						callback('bad email', null);
+					}
+				}
+			});
+		}
+	});
+};
