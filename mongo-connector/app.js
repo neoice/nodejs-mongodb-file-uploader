@@ -35,14 +35,20 @@ app.listen(3002, function(){
 });
 
 // user management
-app.get ('/finduser/:email', function(req, res) {
+app.get ('/user/find/:email', function(req, res) {
 	user_connector.findUser(req.params.email, function(error, result) {
 		console.log(result);
-		res.end( JSON.stringify(result) );
+		if (result) {
+			res.end( JSON.stringify(result) );
+		}
+		else {
+			res.send(404);
+		}
+
 	});
 });
 
-app.post ('/adduser/', function(req, res) {
+app.post ('/user/add/', function(req, res) {
 	console.log(req.body);
 	user_connector.addUser(req.body, function(error, result) {
 		if (error)
@@ -55,7 +61,7 @@ app.post ('/adduser/', function(req, res) {
 	});
 });
 
-app.post ('/authuser/', function(req, res) {
+app.post ('/user/auth/', function(req, res) {
 	console.log(req.body);
 	user_connector.authUser(req.body, function(error, result) {
 		if (error)
@@ -88,4 +94,31 @@ app.get ('/file/:id', function(req, res) {
 			res.send(404);
 		}
 	});
+});
+
+app.post ('/file/upload/', function(req, res) {
+		console.log("FILE UPLOAD HIT");
+	file_connector.saveFile(req, function(error, result) {
+		if (result)
+		{
+			res.end();
+		}
+		else {
+			res.send(500);
+		}
+	});
+});
+
+app.post ('/file/import/', function(req, res) {
+		console.log("FILE IMPORT!");
+
+		console.log(req.body);
+
+		console.log(typeof(req.body));
+
+		file_connector.saveFile(req.body.path);
+
+		//console.log(req);
+
+		res.send(200);
 });

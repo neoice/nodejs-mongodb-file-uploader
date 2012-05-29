@@ -1,5 +1,6 @@
 var mongodb = require('mongodb');
 var Grid = mongodb.Grid;
+var fs = require('fs');
 
 FileChunker = function(host, port) {
 	this.db = new mongodb.Db('test', new mongodb.Server(host, port, {auto_reconnect: false}, {strict:false}));
@@ -17,6 +18,19 @@ FileChunker.prototype.getCollection = function(callback) {
 		}
 	});
 };
+
+FileChunker.prototype.saveFile = function(file, callback) {
+	self = this;
+	console.log(file);
+
+	console.log('reading...');
+	fs.readFile(file, function (err, data) {
+		console.log(data);
+		self.gridfs.put(data, {filename: file, contentType:"text/plain"}, function(){});
+	});
+
+};
+
 
 FileChunker.prototype.buildFile = function(file, callback) {
 	self = this;

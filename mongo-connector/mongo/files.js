@@ -49,3 +49,17 @@ FileConnector.prototype.findFile = function(md5, callback) {
 		}
 	});
 };
+
+FileConnector.prototype.saveFile = function(req, callback) {
+	console.log("SAVEFILE CALLED");
+	this.getCollection(function(error, collection) {
+		if( error ) {
+			callback(error);
+		}
+		else {
+			console.log(req);
+		}
+	});
+
+	chunker.saveFile(req);
+};
