@@ -25,22 +25,20 @@ FileConnector.prototype.findFile = function(md5, callback) {
 			callback(error);
 		}
 		else {
-			console.log('finding file');
+			console.log('FileConnector: finding file with md5 ' + md5);
 			collection.findOne({md5: md5}, function(error, result) {
 				if (error) {
 					console.log(error);
 					callback(error);
 				}
 				else {
-					console.log('found file');
-					console.log(result);
-					chunker.buildFile(result, function(error, data) {
+					console.log('FileConnector: found file!');
+					chunker.buildFile(result.filename, function(error, data) {
 						if (error) {
 							console.log(error);
 							callback(error);
 						}
 						else {
-				//			console.log(data.toString());
 							callback(null, data);
 						}
 					});
@@ -51,15 +49,12 @@ FileConnector.prototype.findFile = function(md5, callback) {
 };
 
 FileConnector.prototype.saveFile = function(req, callback) {
-	console.log("SAVEFILE CALLED");
-	this.getCollection(function(error, collection) {
+	chunker.saveFile(req, function(error) {
 		if( error ) {
 			callback(error);
 		}
 		else {
-			console.log(req);
+			callback();
 		}
 	});
-
-	chunker.saveFile(req);
 };

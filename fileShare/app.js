@@ -72,8 +72,8 @@ app.get('/download/:userId/:file', function(req, res){
 
 // file upload
 app.post('/fileUpload/:id', function(req, res){
-	console.log(req.params.id); //use this id as the collection
-  	console.log(req.files.file); //this is the object that needs to be saved to the database
+	console.log('UploadUI: collection ID ' + req.params.id); //use this id as the collection
+  	//console.log(req.files.file); //this is the object that needs to be saved to the database
 
 
 var options = {
@@ -94,12 +94,12 @@ var soa_req = http.request(options, function(soa_res) {
 
 });
 
-console.log(req.files.file.path.toString());
+//console.log(req.files.file.path.toString());
 
 soa_req.write(req.files.file.path.toString());
 //soa_req.end();
 
-  	res.send(200); 
+  	res.send(200);
 });
 
 app.listen(3000, function(){

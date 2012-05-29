@@ -37,7 +37,7 @@ app.listen(3002, function(){
 // user management
 app.get ('/user/find/:email', function(req, res) {
 	user_connector.findUser(req.params.email, function(error, result) {
-		console.log(result);
+		console.log('MongoDB-API: found user ' + result);
 		if (result) {
 			res.end( JSON.stringify(result) );
 		}
@@ -49,7 +49,7 @@ app.get ('/user/find/:email', function(req, res) {
 });
 
 app.post ('/user/add/', function(req, res) {
-	console.log(req.body);
+	console.log('MongoDB-API: adding user ' + req.body);
 	user_connector.addUser(req.body, function(error, result) {
 		if (error)
 		{
@@ -62,7 +62,7 @@ app.post ('/user/add/', function(req, res) {
 });
 
 app.post ('/user/auth/', function(req, res) {
-	console.log(req.body);
+	console.log('MongoDB-API: authenticating user ' + req.body);
 	user_connector.authUser(req.body, function(error, result) {
 		if (error)
 		{
@@ -82,12 +82,8 @@ app.get ('/file/:id', function(req, res) {
 			// hardcode the content type for now
 			res.setHeader("Content-Type", "image/jpeg");
 
-			// workaround for gridfs.get() returning the file offset by 4 bytes.
-			// dev says it's not a bug LOL
-			var ffs = result.slice(4);
-
 			// SEND OUR RESPONSE BABY
-			res.write(ffs);
+			res.write(result);
 			res.end();
 		}
 		else {
@@ -96,29 +92,14 @@ app.get ('/file/:id', function(req, res) {
 	});
 });
 
-app.post ('/file/upload/', function(req, res) {
-		console.log("FILE UPLOAD HIT");
-	file_connector.saveFile(req, function(error, result) {
-		if (result)
+app.post ('/file/import/', function(req, res) {
+	file_connector.saveFile(req.body.path, function(error) {
+		if (error)
 		{
-			res.end();
-		}
-		else {
 			res.send(500);
 		}
+		else {
+			res.end(result);
+		}
 	});
-});
-
-app.post ('/file/import/', function(req, res) {
-		console.log("FILE IMPORT!");
-
-		console.log(req.body);
-
-		console.log(typeof(req.body));
-
-		file_connector.saveFile(req.body.path);
-
-		//console.log(req);
-
-		res.send(200);
 });
