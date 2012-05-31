@@ -1,10 +1,10 @@
+
+
 // Module dependencies
 var express = require('express');
 var routes = require('./routes');
 var path = require('path');
 var fs = require('fs');
-var crypto = require('crypto');
-
 var http = require('http');
 
 var app = module.exports = express.createServer();
@@ -60,9 +60,8 @@ app.get('/get/:id', function(req, res){
 
 // Click on the images in browser to call this
 app.get('/download/:userId/:file', function(req, res){
-  // If we can't directly give a path to the database we'll have to save the file temporarily on the server
   
-  // This needs to be changed to the path of the file in the database
+  // This needs to be changed to the path of the file
   var path = 'public/files/' + req.params.userId + '/' + req.params.file;
   res.download(path, function(err){
   	res.send(500); //internal server error
@@ -72,36 +71,29 @@ app.get('/download/:userId/:file', function(req, res){
 
 // file upload
 app.post('/fileUpload/:id', function(req, res){
-	console.log('UploadUI: collection ID ' + req.params.id); //use this id as the collection
-  	//console.log(req.files.file); //this is the object that needs to be saved to the database
+	var data = JSON.stringify(req.files);
+	
+	var options = {
+  		host: 'localhost', //change this to the db server url & port
+  		port: 3000,
+  		path: ('/fileUpload/' + req.params.id),
+  		method: 'POST',
+  		headers: { 'Content-Type' : 'application/json' },
+	};
 
-
-var options = {
-host: 'localhost',
-port: 3002,
-path: '/file/import/',
-method: 'POST',
-};
-
-var soa_req = http.request(options, function(soa_res) {
-	console.log('STATUS: ' + soa_res.statusCode);
-	console.log('HEADERS: ' + JSON.stringify(soa_res.headers));
-	soa_res.setEncoding('utf8');
-
-	soa_res.on('data', function (chunk) {
-		console.log('BODY: ' + chunk);
+	var req = http.request(options);
+	
+	req.on('error', function(e) {
+  		console.log('problem with request: ' + e.message);
 	});
 
+	// write data to request body
+	req.write(data);
+	req.end();
+  	res.send(200); 
 });
 
-//console.log(req.files.file.path.toString());
-
-soa_req.write(req.files.file.path.toString());
-//soa_req.end();
-
-  	res.send(200);
+app.listen(4000, function(){
+  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
 
-app.listen(3000, function(){
-  console.log("fileShare UI listening on port %d in %s mode", app.address().port, app.settings.env);
-});

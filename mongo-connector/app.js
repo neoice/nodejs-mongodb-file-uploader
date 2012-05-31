@@ -93,6 +93,8 @@ app.get ('/file/:id', function(req, res) {
 });
 
 app.post ('/file/import/', function(req, res) {
+	console.log(req.body);
+
 	file_connector.saveFile(req.body.path, function(error) {
 		if (error)
 		{
