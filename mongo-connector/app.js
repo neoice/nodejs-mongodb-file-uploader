@@ -79,11 +79,8 @@ app.get ('/file/:id', function(req, res) {
 	file_connector.findFile(req.params.id, function(error, result) {
 		if (result)
 		{
-			// hardcode the content type for now
-			res.setHeader("Content-Type", "image/jpeg");
-
-			// SEND OUR RESPONSE BABY
-			res.write(result);
+			res.setHeader("Content-Type", result.type);
+			res.write(result.data);
 			res.end();
 		}
 		else {
@@ -93,15 +90,16 @@ app.get ('/file/:id', function(req, res) {
 });
 
 app.post ('/file/import/', function(req, res) {
+	console.log('MongoDB-API: import received POST:');
 	console.log(req.body);
 
-	file_connector.saveFile(req.body.path, function(error) {
+	file_connector.saveFile(req.body, function(error) {
 		if (error)
 		{
 			res.send(500);
 		}
 		else {
-			res.end(result);
+			res.end();
 		}
 	});
 });

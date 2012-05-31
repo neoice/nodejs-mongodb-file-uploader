@@ -8,11 +8,17 @@ FileChunker = function(host, port) {
 };
 
 FileChunker.prototype.saveFile = function(file, callback) {
-	// exceedingly primative save file!
 	self = this;
-	var gridfs = new GridStore(self.db, file, 'w');
+	console.log('FileChunker.save: file data:');
+	console.log(file);
 
-	gridfs.writeFile(file, function(error) {
+	// parse the file data out for easy use
+	var path = file.path;
+	var type = file.type;
+
+	var gridfs = new GridStore(self.db, path, 'w', {'content_type': type});
+
+	gridfs.writeFile(path, function(error) {
 		if (error) {
 			callback(error);
 		}
@@ -22,16 +28,20 @@ FileChunker.prototype.saveFile = function(file, callback) {
 	});
 };
 
-FileChunker.prototype.buildFile = function(file, callback) {
+FileChunker.prototype.getFile = function(file, callback) {
 	self = this;
-	console.log('FileChunker  : assembling file named ' + file);
+	console.log('FileChunker.get: assembling file named ' + file.path);
 
 	var gridfs = new GridStore(self.db, file, 'r');
+
+	console.log('FileChunker.get:');
+
 
 	gridfs.open(function(error, gs) {
 		gridfs.seek(0, function() {
 			gridfs.read(function(error, data) {
-				callback(error, data)
+				console.log(gridfs.contentType);
+				callback(error, {'type': gridfs.contentType, 'data': data})
 			});
 		});
 	});

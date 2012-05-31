@@ -32,8 +32,9 @@ FileConnector.prototype.findFile = function(md5, callback) {
 					callback(error);
 				}
 				else {
-					console.log('FileConnector: found file!');
-					chunker.buildFile(result.filename, function(error, data) {
+					console.log('FileConnector: found file:');
+					console.log(result);
+					chunker.getFile(result.filename, function(error, data) {
 						if (error) {
 							console.log(error);
 							callback(error);
@@ -49,6 +50,7 @@ FileConnector.prototype.findFile = function(md5, callback) {
 };
 
 FileConnector.prototype.saveFile = function(req, callback) {
+	console.log('Mongo-FileConn: saveFile() called');
 	chunker.saveFile(req, function(error) {
 		if( error ) {
 			callback(error);

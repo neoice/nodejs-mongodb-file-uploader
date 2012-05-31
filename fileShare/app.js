@@ -75,7 +75,7 @@ app.post('/fileUpload/:id', function(req, res){
 //	console.log(req.files.file.type);
 //	console.log(req.files.file.path);
 
-	var sendme = { "content-type": req.files.file.type, "path": req.files.file.path };
+	var sendme = { "type": req.files.file.type, "path": req.files.file.path };
 	var data = JSON.stringify(sendme);
 
 	var options = {
