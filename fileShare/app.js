@@ -1,5 +1,3 @@
-
-
 // Module dependencies
 var express = require('express');
 var routes = require('./routes');
@@ -50,7 +48,7 @@ app.get('/get/:id', function(req, res){
 		if(err){
 			res.render('notFound', { title : title }); //make this page
 		}else{
-		
+
 			// Give the files array to this function.
 			res.render('fileView', { title : title, files : files, userId : req.params.id });
 		}
@@ -71,18 +69,25 @@ app.get('/download/:userId/:file', function(req, res){
 
 // file upload
 app.post('/fileUpload/:id', function(req, res){
-	var data = JSON.stringify(req.files);
-	
+	//var data = JSON.stringify(req.files.file.path);
+
+	//console.log(data);
+//	console.log(req.files.file.type);
+//	console.log(req.files.file.path);
+
+	var sendme = { "content-type": req.files.file.type, "path": req.files.file.path };
+	var data = JSON.stringify(sendme);
+
 	var options = {
   		host: 'localhost', //change this to the db server url & port
-  		port: 3000,
-  		path: ('/fileUpload/' + req.params.id),
+  		port: 3002,
+  		path: ('/file/import/'),
   		method: 'POST',
   		headers: { 'Content-Type' : 'application/json' },
 	};
 
 	var req = http.request(options);
-	
+
 	req.on('error', function(e) {
   		console.log('problem with request: ' + e.message);
 	});
@@ -90,7 +95,7 @@ app.post('/fileUpload/:id', function(req, res){
 	// write data to request body
 	req.write(data);
 	req.end();
-  	res.send(200); 
+  	res.send(200);
 });
 
 app.listen(3000, function(){
