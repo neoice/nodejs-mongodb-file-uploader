@@ -3,9 +3,11 @@ var express = require('express');
 var routes = require('./routes');
 var path = require('path');
 var fs = require('fs');
+var crypto = require('crypto');
 var http = require('http');
 
 var app = module.exports = express.createServer();
+var logStream = fs.createWriteStream('./server.log', {flags:'w'}); //truncates file if it exists, 'a' to append
 
 // Configuration
 app.configure(function(){
@@ -15,6 +17,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
+  app.use(express.logger({ stream : logStream }));  //logging middleware
 });
 
 app.configure('development', function(){
@@ -26,79 +29,89 @@ app.configure('production', function(){
 });
 
 
-// Root folder
+// Config vars
 var title = "fileShare";
-var filesRoot = "public/files";
 
 // Routes
 
 // Index
 app.get('/', function(req, resp){
-  resp.render('index', { title: title })
+  resp.render('index', { title: title });
 });
 
 app.get('/get/:id', function(req, res){
+        var sendme = { "group_id": req.params.id };
+        var data = JSON.stringify(sendme);
 
-	// The id is the random id given when files are uploaded, client will use this to find files.
+        var options = {
+                host: 'localhost', //change this to the db server url & port
+                port: 3002,
+                path: ('/file/group' + req.params.id ),
+                method: 'GET',
+                headers: { 'Content-Type' : 'application/json' },
+        };
 
-	// Change this fs.readdir to the asycnch mongodb collection lookup.
-	// Basically get all the files in the collection so we can say and id equals a collection.
-	// Then pass the array of file objects to files in the render below.
-	fs.readdir(path.join(filesRoot, req.params.id), function(err, files){
-		if(err){
-			res.render('notFound', { title : title }); //make this page
-		}else{
+        var req = http.request(options);
 
-			// Give the files array to this function.
-			res.render('fileView', { title : title, files : files, userId : req.params.id });
-		}
+        req.on('error', function(e) {
+                console.log('problem with request: ' + e.message);
+        });
+
+        // write data to request body
+        req.write(data);
+        req.end();
+	
+
+
+	fs.readFile(path.join(filesRoot,req.params.id,fileData), 'utf8', function (err, files) {
+  		if(err) {
+  			console.log(err);
+  			res.send(500);
+  		} else {
+  			files = files.slice(0, -1);  //remove trailing comma
+  			files = ('[' + files + ']');  //add brackets to "create" and array literal
+  			files = JSON.parse(files);
+  			res.render('fileView', { title : title, files : files, userId : req.params.id });
+  		}
 	});
 });
 
 
 // Click on the images in browser to call this
 app.get('/download/:userId/:file', function(req, res){
-  
-  // This needs to be changed to the path of the file
-  var path = 'public/files/' + req.params.userId + '/' + req.params.file;
+  var path = filesRoot + req.params.userId + '/' + req.params.file;
   res.download(path, function(err){
-  	res.send(500); //internal server error
+  	res.send(500);  //internal server error
   });
 });
 
 
 // file upload
 app.post('/fileUpload/:id', function(req, res){
-	//var data = JSON.stringify(req.files.file.path);
+        var sendme = { "type": req.files.file.type, "path": req.files.file.path, "group_id": req.params.id };
+        var data = JSON.stringify(sendme);
 
-	//console.log(data);
-//	console.log(req.files.file.type);
-//	console.log(req.files.file.path);
+        var options = {
+                host: 'localhost', //change this to the db server url & port
+                port: 3002,
+                path: ('/file/import/'),
+                method: 'POST',
+                headers: { 'Content-Type' : 'application/json' },
+        };
 
-	var sendme = { "type": req.files.file.type, "path": req.files.file.path };
-	var data = JSON.stringify(sendme);
+        var req = http.request(options);
 
-	var options = {
-  		host: 'localhost', //change this to the db server url & port
-  		port: 3002,
-  		path: ('/file/import/'),
-  		method: 'POST',
-  		headers: { 'Content-Type' : 'application/json' },
-	};
+        req.on('error', function(e) {
+                console.log('problem with request: ' + e.message);
+        });
 
-	var req = http.request(options);
+        // write data to request body
+        req.write(data);
+        req.end();
 
-	req.on('error', function(e) {
-  		console.log('problem with request: ' + e.message);
-	});
-
-	// write data to request body
-	req.write(data);
-	req.end();
-  	res.send(200);
+	res.send(204);
 });
 
 app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
-

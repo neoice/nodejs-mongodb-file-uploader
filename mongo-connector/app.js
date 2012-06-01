@@ -89,6 +89,21 @@ app.get ('/file/:id', function(req, res) {
 	});
 });
 
+app.get ('/file/group/:id', function(req, res) {
+	file_connector.getGroup(req.params.id, function(error, result) {
+		if (result)
+		{
+			console.log(result);
+			//res.setHeader("Content-Type", result.type);
+			//res.write(result.data);
+			res.end();
+		}
+		else {
+			res.send(404);
+		}
+	});
+});
+
 app.post ('/file/import/', function(req, res) {
 	console.log('MongoDB-API: import received POST:');
 	console.log(req.body);

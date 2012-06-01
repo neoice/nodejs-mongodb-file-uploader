@@ -11,21 +11,21 @@
 		<span class="imageHolder">
 			<img class="fileviewimage" 
 				onclick="document.location.href=
-				'<%= "/download/" + userId + "/" + files[i] %>'" 
+				'<%= "/download/" + userId + "/" + files[i].name %>'" 
 				
 				<% if(files[i].type.match(/^image\//)){ %>
-					src=<%= files[i].path %>
+					src="<%= "/files/" + userId + "/" + files[i].name %>"
 					
 				<% }else if(files[i].type.match(/^video\//)){ %>
-					src="../images/videoImage.png"
+					src="/images/videoImage.png"
 					
 				<% }else{ %>
-					src="../images/fileImage.png"
+					src="/images/fileImage.png"
 				<% } %>
 
 			/>
 		</span>
-		<div class="fileviewname"><%= files[i] %></div>
+		<div class="fileviewname"><%= files[i].name %></div>
 	</div> 
     <% } %>
 

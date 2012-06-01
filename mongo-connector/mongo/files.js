@@ -60,3 +60,33 @@ FileConnector.prototype.saveFile = function(req, callback) {
 		}
 	});
 };
+
+FileConnector.prototype.getGroup = function(group_id, callback) {
+	this.getCollection(function(error, collection) {
+		if( error ) {
+			callback(error);
+		}
+		else {
+			console.log('FileConnector: finding files with group_id' + group_id);
+			collection.find({"metadata.group_id": group_id}, function(error, result) {
+				if (error) {
+					console.log(error);
+					callback(error);
+				}
+				else {
+					console.log('FileConnector: found file:');
+					console.log(result);
+					chunker.getFile(result.filename, function(error, data) {
+						if (error) {
+							console.log(error);
+							callback(error);
+						}
+						else {
+							callback(null, data);
+						}
+					});
+				}
+			});
+		}
+	});
+};

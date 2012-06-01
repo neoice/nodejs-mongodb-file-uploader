@@ -30,6 +30,10 @@ a:hover{
 	height: 100px;
 }
 
+#serverSig{
+	display: none;
+}
+
 
 /**********************************
 Main Box (header, menu, dropbox, and file view)
@@ -49,7 +53,7 @@ Main Box (header, menu, dropbox, and file view)
 	height: 160px;
 }
 
-.main_box img:hover{
+#fileview img:hover{
 	cursor: pointer;
 }
 
@@ -68,6 +72,15 @@ Main Box (header, menu, dropbox, and file view)
 	box-shadow: 0 0 10px 1px #000000;	
 }
 
+#menu p{
+	font-size: large;
+}
+
+#sessionId{
+	font-weight: bold;
+	color:red;
+}
+
 #dropbox{
 	min-height: 500px;
 	position: relative;
@@ -83,11 +96,12 @@ Main Box (header, menu, dropbox, and file view)
 	box-shadow: inset 0 0 15px 1px #000000;
 }
 
+
 #dropbox .message{
 	font-size: 12px;
 	font-style: italic;
     text-align: center;
-    padding-top:160px;
+    padding-top:200px;
     display: block;
 }
 

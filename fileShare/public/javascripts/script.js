@@ -1,6 +1,7 @@
 //TODO:
 //large files take a while to render preview, need to give user notification file has been dropped
 
+
 // Random id generator
 function rndId(length) {
   var iStr="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -21,25 +22,22 @@ $(function(){
 	
 	var dropbox = $('#dropbox'),
 	message = $('.message', dropbox);
-	var id = rndId(10); //generate random ID of length 10
-
+	
+	var id = rndId(10);  //get session id	
+	$('.addId').append("<span id='sessionId'>"+id+"</span>");
+	
 	var fileImage = "../images/fileImage.png";
 	var videoImage = "../images/videoImage.png";
-	var prog_Multiplier = 2.2; //width of image preview(in css) / 100 -> used for progress bar
-	
+	var prog_Multiplier = 2.2; //(width of image preview(in css) / 100) -> used for progress bar
+		
 	dropbox.filedrop({
 		paramname:'file', //used to identify file (express ex. request.files.file)
 		
 		maxfiles: 5, //max num of files that can be dragged and dropped at one time
     	maxfilesize: 30,  //max file size in mb
     	
-		url: '/fileUpload/' + id,
-		
-		uploadFinished:function(i,file,response){
-			$.data(file).addClass('done');
-			// response is the JSON object returned
-		},
-		
+		url: 'fileUpload/' + id,
+				
     	error: function(err, file) {
 			switch(err) {
 				case 'BrowserNotSupported':
@@ -72,6 +70,9 @@ $(function(){
 		
 		progressUpdated: function(i, file, progress) {
 			$.data(file).find('.progress').width(progress * prog_Multiplier);
+			if(progress >= 100){
+				$.data(file).addClass('done');
+			}
 		}
     	 
 	});
@@ -105,12 +106,10 @@ $(function(){
 			reader.readAsDataURL(file);
 		}else if(file.type.match(/^video\//)){
 			image.attr('src', videoImage);
-			preview.find('.filenameHolder').html(file.name);
 		}else{
 			image.attr('src', fileImage);
-			preview.find('.filenameHolder').html(file.name);
 		}
-		
+		preview.find('.filenameHolder').html(file.name); //write filename to preview
 		message.hide();
 		preview.appendTo(dropbox);
 		

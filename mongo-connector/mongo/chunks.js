@@ -15,8 +15,9 @@ FileChunker.prototype.saveFile = function(file, callback) {
 	// parse the file data out for easy use
 	var path = file.path;
 	var type = file.type;
+	var group_id = file.group_id;
 
-	var gridfs = new GridStore(self.db, path, 'w', {'content_type': type});
+	var gridfs = new GridStore(self.db, path, 'w', {'content_type': type, 'metadata': {'group_id': group_id}});
 
 	gridfs.writeFile(path, function(error) {
 		if (error) {
@@ -35,7 +36,6 @@ FileChunker.prototype.getFile = function(file, callback) {
 	var gridfs = new GridStore(self.db, file, 'r');
 
 	console.log('FileChunker.get:');
-
 
 	gridfs.open(function(error, gs) {
 		gridfs.seek(0, function() {
