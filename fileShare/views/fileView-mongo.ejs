@@ -1,0 +1,36 @@
+<div class="main_box">
+    <div>
+    	<img src="/images/Sun_Logo.png" alt="fileShare logo" onclick="document.location.href='/'"/>
+    </div>
+
+	<div id="fileview">
+		<% for (i in files ) { %>
+			<div class="preview">
+				<span class="imageHolder">
+					<a href="http://su-ss.co.cc:3002/file/<%= files[i].md5 %>"><%= files[i].contentType %>
+						<img class="fileviewimage"
+							<% if(files[i].contentType.match(/^image\//)){ %>
+								src="<%= "http://su-ss.co.cc:3002/file/" + files[i].md5 %>"
+							<% }else if(files[i].contentType.match(/^video\//)){ %>
+								src="/images/videoImage.png"
+							<% }else{ %>
+								src="/images/fileImage.png"
+							<% } %>
+						/>
+					</a>
+				</span>
+			</div>
+
+		<% }; %>
+
+	</div>
+</div>
+
+<div class="spacer">
+</div>
+            
+<!-- HTML5 Uploader plugin -->
+<script type="text/javascript" src="javascripts/jquery.filedrop.js"></script>
+            
+<script type="text/javascript" src="javascripts/script.js"></script>
+

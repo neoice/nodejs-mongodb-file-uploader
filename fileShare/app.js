@@ -7,7 +7,7 @@ var crypto = require('crypto');
 var http = require('http');
 
 var app = module.exports = express.createServer();
-var logStream = fs.createWriteStream('./server.log', {flags:'w'}); //truncates file if it exists, 'a' to append
+var logStream = fs.createWriteStream('./server.log', {flags:'a'}); //truncates file if it exists, 'a' to append
 
 // Configuration
 app.configure(function(){
@@ -46,34 +46,31 @@ app.get('/get/:id', function(req, res){
         var options = {
                 host: 'localhost', //change this to the db server url & port
                 port: 3002,
-                path: ('/file/group' + req.params.id ),
+                path: ('/file/group/' + req.params.id ),
                 method: 'GET',
                 headers: { 'Content-Type' : 'application/json' },
         };
 
+	var a = function(files) {
+		console.log(req.body);
+		res.render('fileView-mongo', {title: "files!", files: files});
+	};
+
         var req = http.request(options);
+
+	req.end();
 
         req.on('error', function(e) {
                 console.log('problem with request: ' + e.message);
         });
 
-        // write data to request body
-        req.write(data);
-        req.end();
-	
-
-
-	fs.readFile(path.join(filesRoot,req.params.id,fileData), 'utf8', function (err, files) {
-  		if(err) {
-  			console.log(err);
-  			res.send(500);
-  		} else {
-  			files = files.slice(0, -1);  //remove trailing comma
-  			files = ('[' + files + ']');  //add brackets to "create" and array literal
-  			files = JSON.parse(files);
-  			res.render('fileView', { title : title, files : files, userId : req.params.id });
-  		}
+	req.on('response', function(response) {
+		response.on('data', function(chunk) {
+			a(JSON.parse(chunk));
+			console.log('BODY: ' + chunk);
+		});
 	});
+
 });
 
 

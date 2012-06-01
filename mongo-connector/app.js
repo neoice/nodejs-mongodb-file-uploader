@@ -93,10 +93,9 @@ app.get ('/file/group/:id', function(req, res) {
 	file_connector.getGroup(req.params.id, function(error, result) {
 		if (result)
 		{
-			console.log(result);
-			//res.setHeader("Content-Type", result.type);
-			//res.write(result.data);
-			res.end();
+			result.toArray( function(error, doc) {
+				res.end(JSON.stringify(doc));
+			});
 		}
 		else {
 			res.send(404);
