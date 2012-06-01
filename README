@@ -1,0 +1,9 @@
+since we are now using multiple nodejs+express applications,
+symbolic links to node_modules are being used to reduce the
+git log clutter and repo size. this may cause issues on
+non-POSIX systems (aka Windows). if this occurs, just copy
+_nodejs/node_modules into each of the express application
+roots.
+
+a shellscript, run.sh, has been included in order to
+spin up all the daemons at once.
