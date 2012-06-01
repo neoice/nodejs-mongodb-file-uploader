@@ -30,8 +30,6 @@ FileChunker.prototype.saveFile = function(file, callback) {
 
 FileChunker.prototype.getFile = function(file, callback) {
 	self = this;
-	console.log('FileChunker.get: assembling file named ' + file.path);
-
 	var gridfs = new GridStore(self.db, file, 'r');
 
 	gridfs.open(function(error, gs) {
