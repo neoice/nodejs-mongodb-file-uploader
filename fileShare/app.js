@@ -36,7 +36,7 @@ var title = "fileShare";
 
 // Index
 app.get('/', function(req, resp){
-  resp.render('index', { title: title });
+  resp.render('index', { title: title, server: req.headers.host });
 });
 
 app.get('/get/:id', function(req, res){
@@ -51,25 +51,24 @@ app.get('/get/:id', function(req, res){
                 headers: { 'Content-Type' : 'application/json' },
         };
 
-	var a = function(files) {
+	var render_template = function(files) {
 		console.log(req.body);
-		res.render('fileView-mongo', {title: "files!", files: files});
+		res.render('fileView-mongo', {title: "files!", files: files, server: req.headers.host.slice(0,-5)}); // hardcoded for 4-digit ports
 	};
 
-        var req = http.request(options);
+        var soa_req = http.request(options);
 
-	req.end();
-
-        req.on('error', function(e) {
+        soa_req.on('error', function(e) {
                 console.log('problem with request: ' + e.message);
         });
 
-	req.on('response', function(response) {
+	soa_req.on('response', function(response) {
 		response.on('data', function(chunk) {
-			a(JSON.parse(chunk));
-			console.log('BODY: ' + chunk);
+			render_template(JSON.parse(chunk));
 		});
 	});
+
+	soa_req.end();
 
 });
 

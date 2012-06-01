@@ -7,10 +7,10 @@
 		<% for (i in files ) { %>
 			<div class="preview">
 				<span class="imageHolder">
-					<a href="http://su-ss.co.cc:3002/file/<%= files[i].md5 %>"><%= files[i].contentType %>
+					<a href="http://<%= server%>:3002/file/<%= files[i].md5 %>">
 						<img class="fileviewimage"
 							<% if(files[i].contentType.match(/^image\//)){ %>
-								src="<%= "http://su-ss.co.cc:3002/file/" + files[i].md5 %>"
+								src="http://<%= server %>:3002/file/<%=files[i].md5 %>"
 							<% }else if(files[i].contentType.match(/^video\//)){ %>
 								src="/images/videoImage.png"
 							<% }else{ %>

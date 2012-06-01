@@ -9,8 +9,7 @@ FileChunker = function(host, port) {
 
 FileChunker.prototype.saveFile = function(file, callback) {
 	self = this;
-	console.log('FileChunker.save: file data:');
-	console.log(file);
+	console.log('FileChunker.save: ' + file.path);
 
 	// parse the file data out for easy use
 	var path = file.path;
@@ -35,12 +34,9 @@ FileChunker.prototype.getFile = function(file, callback) {
 
 	var gridfs = new GridStore(self.db, file, 'r');
 
-	console.log('FileChunker.get:');
-
 	gridfs.open(function(error, gs) {
 		gridfs.seek(0, function() {
 			gridfs.read(function(error, data) {
-				console.log(gridfs.contentType);
 				callback(error, {'type': gridfs.contentType, 'data': data})
 			});
 		});
