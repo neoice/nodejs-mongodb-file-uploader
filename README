@@ -1,0 +1,86 @@
+the story of this code
+======================
+now that over a year has passed, I will tell the story of this code...
+
+in my final year of college, I was in a 400/500 level course on scalable web applications.
+
+for the final project, we were assigned teams of four and given the following requirements:
+* build a **scalable** web application image uploader (like minus or imgur)
+* learn git and use github to collaborate
+we were also told that regardless of who contributed what, we would recieve a single grade.
+
+right off the bat, 2 of my teammates indicated they were not going to be contributing at all.
+this left me and one other teammate, Brandon. (I put his name in the commitlog, so I'm not even going to bother hiding it.)
+
+
+personally, I had a passion for Linux web services and high scalability.
+I was excited by this project! finally, a chance to build a scalable web service!
+unfortunately, Brandon had absolutely no understanding of scalability or avalability.
+during the design phase, every single failure scenario I proposed to him was met with "that will never happen."
+
+
+here's a paraphrased discussion we had:
+brandon: this mongo-files thing sounds hard, lets just store files on disk.
+me: what happens if a server goes down?
+brandon: that will never happen and if it does, we'll just reboot it.
+me: ok, so during the reboot, a percentage of your files will be unavalible.
+brandon: so?
+me: so that means you're not highly avalible.
+brandon: ...
+me: and what happens if we physically lose a node due to disk failures, fire, datacenter outages, etc?
+brandon: none of those things will ever happen, lol.
+me: you have now demonstrated that you are too stupid to even understand why you are incorrect.
+
+
+at this point, I stopped arguing with him.
+we agreed that he'd handle the front-end and I'd handle the back-end (ie: the hard part).
+
+
+less than a week before the due date, my teammate disappeared.
+for **4** days.
+I emailed him a half dozen times asking if he was working, where his commits were, etc.
+
+Brandon showed up on campus the day the project was due and told me that Git was too hard and gave me a zip file of code.
+**learning git was part of the assignment**.
+
+
+fine, whatever, I've manually merged huge blocks of highly divergent code from teammates that couldn't understand version control.
+I started reading his code...
+
+
+he wrote a custom load balancer with application-specific logic: the load balancer knew what app server had your file on disk and performed an HTTP redirect to the app server. (you couldn't even use a proxy, ffs...)
+our project was unscalable, not HA and now stateful.
+Brandon had managed to introduce another single point of failure **and** introduce state to an HTTP application.
+
+
+I began a furious 6-hour hackathon, finishing literally minutes before we presented.
+I managed to hook up our application to mongo-files and removed most of Brandon's worst decisions:
+the UI was still garbage and did some really dumbass stuff like building URLs using client-side Javascript instead of server-side templates, but I was out of time.
+
+
+we presented, the software worked, I bragged about the mongo-files portion and how it meant we could scale our file storage layer as well as our application layer.
+Brandon rolled his eyes.
+we got a great grade.
+I somehow managed to not throw Brandon under the bus for his staggering incompetence and willful lack of effort.
+
+what did I learn?
+=================
+* sometimes, team projects suck. (I learned that in high school)
+* javascript is a dumb language full of horrible design decisions.
+* nodejs is even worse.
+* v8 is cool, but all the coolness is workarounds for stupidity in javascript.
+* mongodb is really great for no-setup development environments (schemas are hard, lets go shopping!)
+* mongo-files is really cool (although I'd rather use drbd/gluster/SAN)
+
+why is this code even here still?
+================================
+even though this project was a complete disaster, I leave it here as a monument to my perseverance.
+despite working with a teammate that was **willfully ignorant** and using a framework that I found to be completely braindead, I managed to produce a working product that met the specification.
+
+message to brandon
+==================
+I pray that you are not employed in software development, technology of any sort, or holding a position of any responsibility.
+your willful ignorance **will** cause you you to completely bungle projects, damaging your company and your peers.
+if your resume ever comes across my desk, I will personally throw it in the shredder and inform all of my colleagues to blackball you.
+
+you should probably unstar this repo. I am never giving you commit access.
