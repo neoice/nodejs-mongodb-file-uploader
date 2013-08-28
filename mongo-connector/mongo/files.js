@@ -27,11 +27,13 @@ FileConnector.prototype.findFile = function(md5, callback) {
 		else {
 			console.log('FileConnector: finding file with md5 ' + md5);
 			collection.findOne({md5: md5}, function(error, result) {
+			
 				if (error) {
 					console.log(error);
 					callback(error);
 				}
 				else {
+					if(result){
 					chunker.getFile(result.filename, function(error, data) {
 						if (error) {
 							console.log(error);
@@ -41,6 +43,9 @@ FileConnector.prototype.findFile = function(md5, callback) {
 							callback(null, data);
 						}
 					});
+					}else{
+						callback(error);
+					}
 				}
 			});
 		}
